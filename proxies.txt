@@ -1,0 +1,3 @@
+# MAKE SURE ALL YOUR PROXIES ARE EITHER HTTP OR HTTPS
+# PROXY FORMAT: (proxy type)://(proxy ip):(proxy port)
+# Example: https://127.0.0.1:100114.110.19.33:8080

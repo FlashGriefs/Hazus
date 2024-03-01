@@ -14,6 +14,13 @@ def get_proxies():
                 proxies.append(stripped_line)
         return proxies
 
+def validate_webhook(webhook):
+    response = requests.get(webhook)
+    if response.status_code == 200:
+        return True
+    else:
+        return False
+
 def post_to_webhook(proxy=False, webhook=None, data=None, headers=None):
     if proxy == False:
         try:
@@ -43,52 +50,61 @@ def post_to_webhook(proxy=False, webhook=None, data=None, headers=None):
             print(colorama.Fore.RED + f"Unkown Error: {proxy}")
 
 def webhook_spammer():
-    use_proxies = input("Use Proxies? (Y/N): ")
-    max_threads = int(input("Max Threads: "))
-    webhook = input("Webhook URL: ")
-    username = input("Set username of webhook: ")
-    message = input("Message to spam: ")
-    data = {
-        "content": message,
-        "username": username
-    }
-    headers = {
-        "Content-Type": "application/json"
-    }
-    print ("Spamming webhook. (CTRL + C to stop.)")
     try:
-        if use_proxies.lower().strip() == "y":
-            proxylist = get_proxies()
-            if not proxylist:
-                print(colorama.Fore.RED + "ERROR: NO PROXIES IN PROXIES.TXT")
+        webhook = input(colorama.Fore.RESET + "Webhook URL: ")
+
+        if validate_webhook(webhook) is False:
+                print(colorama.Fore.RED + "Invalid Webhook\n")
                 webhook_spammer()
 
-            else:
+        use_proxies = input(colorama.Fore.RESET + "Use Proxies? (Y/N): ")
+        max_threads = int(input("Max Threads: "))
+        username = input("Set username of webhook: ")
+        message = input("Message to spam: ")
+        data = {
+            "content": message,
+            "username": username
+        }
+        headers = {
+            "Content-Type": "application/json"
+        }
+        print ("Spamming webhook. (CTRL + C to stop.)")
+        try:
+            if use_proxies.lower().strip() == "y":
+                proxylist = get_proxies()
+                if not proxylist:
+                    print(colorama.Fore.RED + "ERROR: NO PROXIES IN PROXIES.TXT")
+                    webhook_spammer()
+
+                else:
+                    try:
+                        while True:
+                            with ThreadPoolExecutor(max_workers=max_threads) as executor:
+                                futures = [executor.submit(post_to_webhook, proxy, webhook, data, headers) for proxy in proxylist]
+                                for future in as_completed(futures):
+                                    future.result()
+                    except KeyboardInterrupt:
+                        subprocess.Popen("cls", shell=True)
+                        main()
+
+            if use_proxies.lower().strip() == "n":
                 try:
                     while True:
                         with ThreadPoolExecutor(max_workers=max_threads) as executor:
-                            futures = [executor.submit(post_to_webhook, proxy, webhook, data, headers) for proxy in proxylist]
+                            futures = [executor.submit(post_to_webhook, webhook, data, headers)]
                             for future in as_completed(futures):
                                 future.result()
                 except KeyboardInterrupt:
                     subprocess.Popen("cls", shell=True)
                     main()
 
-        if use_proxies.lower().strip() == "n":
-            try:
-                while True:
-                    with ThreadPoolExecutor(max_workers=max_threads) as executor:
-                        futures = [executor.submit(post_to_webhook, webhook, data, headers)]
-                        for future in as_completed(futures):
-                            future.result()
-            except KeyboardInterrupt:
-                subprocess.Popen("cls", shell=True)
-                main()
+            else:
+                print (colorama.Fore.RED + "ERROR: PLEASE CHOOSE EITHER Y OR N")
+                webhook_spammer()
 
-        else:
-            print (colorama.Fore.RED + "ERROR: PLEASE CHOOSE EITHER Y OR N")
-            webhook_spammer()
-
+        except KeyboardInterrupt:
+            subprocess.Popen("cls", shell=True)
+            main()
     except KeyboardInterrupt:
         subprocess.Popen("cls", shell=True)
         main()
@@ -99,7 +115,6 @@ def read_proxies(file_path):
     return proxies
 
 def validate_proxy(proxy):
-    """Validate a proxy by attempting to connect to a test URL."""
     try:
         response = requests.get("https://discord.com/", proxies={"http": proxy, "https": proxy}, timeout=4)
         is_valid = response.status_code == 200
@@ -132,10 +147,31 @@ def validate_proxies():
     print(colorama.Fore.GREEN + "Validated Proxies.")
     main()
 
+def webhook_deleter():
+    try:
+        webhook = input(colorama.Fore.RESET + "Webhook to delete: ")
+
+        if validate_webhook(webhook) is False:
+            print(colorama.Fore.RED + "Invalid Webhook\n")
+            webhook_deleter()
+
+        response = requests.delete(webhook)
+        if response.status_code == 204:
+            print(colorama.Fore.GREEN + "Webhook deleted successfully.\n")
+            main()
+        else:
+            print(colorama.Fore.RED + "Failed to delete webhook - if the issue persists dm me on discord: flashgriefs\n")
+            webhook_deleter()
+        main()
+    except KeyboardInterrupt:
+        print ("")
+        main()
+        
 
 options = {
-    1: webhook_spammer,
-    2: validate_proxies,
+    1: validate_proxies,
+    2: webhook_spammer,
+    3: webhook_deleter,
 }
 
 def invalid_option():
@@ -152,10 +188,11 @@ def main():
                                     ██╔══██║██╔══██║██╔══╝░░██║░░░██║░╚═══██╗
                                     ██║░░██║██║░░██║███████╗╚██████╔╝██████╔╝
                                     ╚═╝░░╚═╝╚═╝░░╚═╝╚══════╝░╚═════╝░╚═════╝░""")
-    print ("")
+    print ("By https://youtube.com/@flash_gang\n")
     print (colorama.Fore.YELLOW + 
-"""    [1] Webhook Spammer
-    [2] Validate Proxies""")
+"""    [1] Validate Proxies
+    [2] Webhook Spammer
+    [3] Webhook Deleter""")
     try:
         choice = int(input(colorama.Fore.WHITE + "Choose Option: "))
         if choice in options:

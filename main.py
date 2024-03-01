@@ -125,8 +125,8 @@ def validate_proxies():
 
     with open("proxies.txt", 'w') as file:
         file.write("""# MAKE SURE ALL YOUR PROXIES ARE EITHER HTTP OR HTTPS
-# PROXY FORMAT: (proxy type)://(proxy ip):(proxy port)
-# Example: https://127.0.0.1:100""")
+# PROXY FORMAT: (proxy ip):(proxy port)
+# Example: 127.0.0.1:100\n""")
         for proxy in valid_proxies:
             file.write(proxy + '\n')
     print(colorama.Fore.GREEN + "Validated Proxies.")

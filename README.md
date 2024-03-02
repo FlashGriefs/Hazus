@@ -9,12 +9,13 @@ A discord multi tool please project.
 
 # Features:
 - Webhook Spammer
+- Webhook Deleter
 - Proxy Validator
+- Token Info
 
 # Coming Soon:
 - Bot Nuker
-- Token Validator
 - Account Nuker (mabye)
-- Webhook Deleter
 
-![image](https://github.com/FlashGriefs/Hazus/assets/140736136/0f6b9c66-3679-45b6-8f94-f6fae92f7bc6)
+![image](https://github.com/FlashGriefs/Hazus/assets/140736136/4c236d3d-fce6-4848-9831-f95a20c169ab)
+

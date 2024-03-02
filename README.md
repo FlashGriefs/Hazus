@@ -12,9 +12,10 @@ A discord multi tool pleasure project.
 - Webhook Deleter
 - Proxy Validator
 - Token Info
+- Bot Nuker (Not finished)
+- Shitty Nitro Sniper (Buggy)
 
 # Coming Soon:
-- Bot Nuker
 - Account Nuker (mabye)
 
 ![image](https://github.com/FlashGriefs/Hazus/assets/140736136/4c236d3d-fce6-4848-9831-f95a20c169ab)

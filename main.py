@@ -167,11 +167,53 @@ def webhook_deleter():
         print ("")
         main()
         
+def token_info():
+    token = input("Token: ")
+    response = requests.get("https://discord.com/api/v9/users/@me", headers={"Authorization": token})
+    if response.status_code == 200:
+        user_response = requests.get(f"https://discord.com/api/v9/users/@me", headers={"Authorization": token})
+        user_data = user_response.json()
+        username = user_data.get("username")
+        bio = user_data.get("bio", "No bio set.")
+        guilds_response = requests.get(f"https://discord.com/api/v9/users/@me/guilds", headers={"Authorization": token})
+        print(colorama.Fore.CYAN + f"------------{username}------------\n")
+        print(colorama.Fore.CYAN + "Token Type: USER\n")
+        print(colorama.Fore.CYAN + f"Bio: {bio}\n")
+        print(colorama.Fore.CYAN + f"------------{username}------------\n")
+        print(colorama.Fore.CYAN + f"Servers {username} is in:\n")
+        guilds_data = guilds_response.json()
+        for guild in guilds_data:
+            print(colorama.Fore.CYAN + f"Server Name: {guild['name']}, Server ID: {guild['id']}")
+    elif response.status_code == 401:
+        response = requests.get("https://discord.com/api/v9/users/@me", headers={"Authorization": f"Bot {token}"})
+        if response.status_code == 200:
+            user_response = requests.get(f"https://discord.com/api/v9/users/@me", headers={"Authorization": f"Bot {token}"})
+            user_data = user_response.json()
+            username = user_data.get("username")
+            bio = user_data.get("bio", "No bio set.")
+            guilds_response = requests.get(f"https://discord.com/api/v9/users/@me/guilds", headers={"Authorization": f"Bot {token}"})
+            print(colorama.Fore.CYAN + f"------------{username}------------\n")
+            print(colorama.Fore.CYAN + "Token Type: BOT\n")
+            print(colorama.Fore.CYAN + f"Bio: {bio}\n")
+            print(colorama.Fore.CYAN + f"------------{username}------------\n")
+            print(colorama.Fore.CYAN + f"Servers {username} is in:\n")
+            guilds_data = guilds_response.json()
+            for guild in guilds_data:
+                print(colorama.Fore.CYAN + f"Server Name: {guild['name']}, Server ID: {guild['id']}")
+        else:
+            print(colorama.Fore.RED + "Invalid Token.\n")
+            main()
+    else:
+        print(colorama.Fore.RED + "Unexpected response from Discord API.\n")
+        main()
+    print("")
+    main()
 
 options = {
     1: validate_proxies,
     2: webhook_spammer,
     3: webhook_deleter,
+    4: token_info,
 }
 
 def invalid_option():
@@ -192,9 +234,10 @@ def main():
     print (colorama.Fore.YELLOW + 
 """    [1] Validate Proxies
     [2] Webhook Spammer
-    [3] Webhook Deleter""")
+    [3] Webhook Deleter
+    [4] Token Info""")
     try:
-        choice = int(input(colorama.Fore.WHITE + "Choose Option: "))
+        choice = int(input(colorama.Fore.WHITE + "\nChoose Option: "))
         if choice in options:
             options[choice]()
         else:

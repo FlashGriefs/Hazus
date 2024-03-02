@@ -3,8 +3,14 @@ import json
 import time
 import subprocess
 import requests
+import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+def clear():
+    if os.name == "nt":
+        subprocess.Popen("cls", shell=True)
+    else:
+        print("\033c")
 def get_proxies():
     with open("proxies.txt", 'r') as file:
         proxies = []
@@ -84,7 +90,7 @@ def webhook_spammer():
                                 for future in as_completed(futures):
                                     future.result()
                     except KeyboardInterrupt:
-                        subprocess.Popen("cls", shell=True)
+                        clear()
                         main()
 
             if use_proxies.lower().strip() == "n":
@@ -95,7 +101,7 @@ def webhook_spammer():
                             for future in as_completed(futures):
                                 future.result()
                 except KeyboardInterrupt:
-                    subprocess.Popen("cls", shell=True)
+                    clear()
                     main()
 
             else:
@@ -103,10 +109,10 @@ def webhook_spammer():
                 webhook_spammer()
 
         except KeyboardInterrupt:
-            subprocess.Popen("cls", shell=True)
+            clear()
             main()
     except KeyboardInterrupt:
-        subprocess.Popen("cls", shell=True)
+        clear()
         main()
 
 def read_proxies(file_path):
@@ -244,6 +250,5 @@ def main():
             invalid_option()
     except ValueError:
         print (colorama.Fore.RED + "INVALID OPTION")
-
-subprocess.Popen("cls", shell=True)
+clear()
 main()

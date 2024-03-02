@@ -18,5 +18,6 @@ A discord multi tool pleasure project.
 # Coming Soon:
 - Account Nuker (mabye)
 
-![image](https://github.com/FlashGriefs/Hazus/assets/140736136/4c236d3d-fce6-4848-9831-f95a20c169ab)
+![image](https://github.com/FlashGriefs/Hazus/assets/140736136/1357592f-2ae0-41cf-8227-65b25622fbfd)
+
 

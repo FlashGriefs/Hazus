@@ -5,12 +5,15 @@ import subprocess
 import requests
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from botnuker import bot_nuker_helper
+from shittysniper import shitty_sniper
 
 def clear():
     if os.name == "nt":
         subprocess.Popen("cls", shell=True)
     else:
         print("\033c")
+
 def get_proxies():
     with open("proxies.txt", 'r') as file:
         proxies = []
@@ -64,7 +67,7 @@ def webhook_spammer():
                 webhook_spammer()
 
         use_proxies = input(colorama.Fore.RESET + "Use Proxies? (Y/N): ")
-        max_threads = int(input("Max Threads: "))
+        max_threads = int(input("Max Threads (more threads = faster but harder on pc): "))
         username = input("Set username of webhook: ")
         message = input("Message to spam: ")
         data = {
@@ -115,8 +118,8 @@ def webhook_spammer():
         clear()
         main()
 
-def read_proxies(file_path):
-    with open(file_path, 'r') as file:
+def read_proxies():
+    with open("proxies.txt", 'r') as file:
         proxies = [line.strip() for line in file.readlines()]
     return proxies
 
@@ -131,7 +134,7 @@ def validate_proxy(proxy):
 def validate_proxies():
     max_threads = int(input("Max Threads: "))
     print ("Validating Proxies...")
-    proxies = read_proxies("proxies.txt")
+    proxies = read_proxies()
     valid_proxies = []
 
     with ThreadPoolExecutor(max_workers=max_threads) as executor:
@@ -215,11 +218,24 @@ def token_info():
     print("")
     main()
 
+def bot_nuker():
+    bot_nuker_helper()
+    main()
+
+def shitty_nitro_sniper():
+    shitty_sniper()
+    print("Terminating sniper...")
+    time.sleep(10)
+    clear()
+    main()
+
 options = {
     1: validate_proxies,
     2: webhook_spammer,
     3: webhook_deleter,
     4: token_info,
+    5: bot_nuker,
+    6: shitty_nitro_sniper,
 }
 
 def invalid_option():
@@ -236,12 +252,14 @@ def main():
                                     ██╔══██║██╔══██║██╔══╝░░██║░░░██║░╚═══██╗
                                     ██║░░██║██║░░██║███████╗╚██████╔╝██████╔╝
                                     ╚═╝░░╚═╝╚═╝░░╚═╝╚══════╝░╚═════╝░╚═════╝░""")
-    print ("By https://youtube.com/@flash_gang\n")
+    print ("https://github.com/FlashGriefs/Hazus\n")
     print (colorama.Fore.YELLOW + 
 """    [1] Validate Proxies
     [2] Webhook Spammer
     [3] Webhook Deleter
-    [4] Token Info""")
+    [4] Token Info
+    [5] Bot Nuker (NOT FINISHED DONT USE)
+    [6] Shitty Nitro Sniper (buggy lmao)""")
     try:
         choice = int(input(colorama.Fore.WHITE + "\nChoose Option: "))
         if choice in options:

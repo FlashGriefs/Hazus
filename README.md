@@ -1,5 +1,5 @@
 # Hazus
-A discord multi tool please project.
+A discord multi tool pleasure project.
 
 # Setup
 1) Clone the repo or download the files the unzip them.

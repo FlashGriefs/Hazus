@@ -18,6 +18,10 @@ A discord multi tool pleasure project.
 - Account Nuker (mabye)
 
 # Q/A
+Q: Why is Hazus crashing when I try to use the tools?
+
+A: You have no proxies in proxies.txt
+
 Q: Can I fork this and make my own multitool?
 
 A: Sure just credit me, but I wouldnt recommend it as im a super messy coder.

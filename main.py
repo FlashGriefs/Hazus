@@ -258,8 +258,8 @@ def main():
     [2] Webhook Spammer
     [3] Webhook Deleter
     [4] Token Info
-    [5] Bot Nuker (NOT FINISHED DONT USE)
-    [6] Shitty Nitro Sniper (buggy lmao)""")
+    [5] Bot Nuker
+    [6] Shitty Nitro Sniper""")
     try:
         choice = int(input(colorama.Fore.WHITE + "\nChoose Option: "))
         if choice in options:

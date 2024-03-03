@@ -8,6 +8,14 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from botnuker import bot_nuker_helper
 from shittysniper import shitty_sniper
 
+def cprint(text, type):
+    if type == 0:
+        print (colorama.Fore.LIGHTBLACK_EX + "[" + colorama.Fore.GREEN + "Success" + colorama.Fore.LIGHTBLACK_EX + "] " + colorama.Fore.CYAN + text)
+    if type == 1:
+        print (colorama.Fore.LIGHTBLACK_EX + "[" + colorama.Fore.RED + "Error" + colorama.Fore.LIGHTBLACK_EX + "] " + colorama.Fore.CYAN + text)
+    if type == 2:
+        print (colorama.Fore.LIGHTBLACK_EX + "[" + colorama.Fore.YELLOW + "Warn" + colorama.Fore.LIGHTBLACK_EX + "] " + colorama.Fore.CYAN + text)
+
 def clear():
     if os.name == "nt":
         subprocess.Popen("cls", shell=True)
@@ -35,35 +43,35 @@ def post_to_webhook(proxy=False, webhook=None, data=None, headers=None):
         try:
             response = requests.post(webhook, data=json.dumps(data), headers=headers, timeout=5)
             if response.status_code == 204:
-                print(colorama.Fore.GREEN + "Sent message to webhook.")
+                cprint("Sent message to webhook.", 0)
             else:
-                print(colorama.Fore.RED + "Webhook is being rate limited.")
+                cprint("Webhook is being rate limited.", 1)
         except requests.exceptions.ProxyError:
-            print (colorama.Fore.RED + f"Proxy {proxy} failed.")
+            cprint(f"Proxy {proxy} failed.", 1)
         except requests.exceptions.ReadTimeout:
-            print(colorama.Fore.RED + f"Proxy {proxy} Timed out.")
+            cprint(f"Proxy {proxy} Timed out.", 1)
         except:
-            print(colorama.Fore.RED + f"Unkown Error: {proxy}")
+            cprint(f"Unkown Error: {proxy}", 1)
     else:
         try:
             response = requests.post(webhook, proxies={"http": proxy, "https": proxy}, data=json.dumps(data), headers=headers, timeout=4)
             if response.status_code == 204:
-                print(colorama.Fore.GREEN + "Sent message to webhook.")
+                cprint("Sent message to webhook.", 0)
             else:
-                print(colorama.Fore.RED + "Webhook is being rate limited.")
+                cprint("Webhook is being rate limited.")
         except requests.exceptions.ProxyError:
-            print(colorama.Fore.RED + f"Proxy {proxy} failed.")
+            cprint(f"Proxy {proxy} failed.", 1)
         except requests.exceptions.ReadTimeout:
-            print(colorama.Fore.RED + f"Proxy {proxy} Timed out.")
+            cprint(f"Proxy {proxy} Timed out.", 1)
         except:
-            print(colorama.Fore.RED + f"Unkown Error: {proxy}")
+            cprint(f"Unkown Error: {proxy}", 1)
 
 def webhook_spammer():
     try:
         webhook = input(colorama.Fore.RESET + "Webhook URL: ")
 
         if validate_webhook(webhook) is False:
-                print(colorama.Fore.RED + "Invalid Webhook\n")
+                cprint("Invalid Webhook\n", 1)
                 webhook_spammer()
 
         use_proxies = input(colorama.Fore.RESET + "Use Proxies? (Y/N): ")
@@ -82,7 +90,7 @@ def webhook_spammer():
             if use_proxies.lower().strip() == "y":
                 proxylist = get_proxies()
                 if not proxylist:
-                    print(colorama.Fore.RED + "ERROR: NO PROXIES IN PROXIES.TXT")
+                    cprint("ERROR: NO PROXIES IN PROXIES.TXT", 1)
                     webhook_spammer()
 
                 else:
@@ -108,7 +116,7 @@ def webhook_spammer():
                     main()
 
             else:
-                print (colorama.Fore.RED + "ERROR: PLEASE CHOOSE EITHER Y OR N")
+                cprint("ERROR: PLEASE CHOOSE EITHER Y OR N", 0)
                 webhook_spammer()
 
         except KeyboardInterrupt:
@@ -143,9 +151,9 @@ def validate_proxies():
             proxy, is_valid = future.result()
             if is_valid:
                 valid_proxies.append(proxy)
-                print (colorama.Fore.GREEN + f"Valid proxy found: {proxy}")
+                cprint(f"Valid proxy found: {proxy}", 0)
             else:
-                print(colorama.Fore.RED + f"Invalid proxy removed: {proxy}")
+                cprint(f"Invalid proxy removed: {proxy}", 2)
 
     with open("proxies.txt", 'w') as file:
         file.write("""# MAKE SURE ALL YOUR PROXIES ARE EITHER HTTP OR HTTPS
@@ -153,7 +161,7 @@ def validate_proxies():
 # Example: 127.0.0.1:100\n""")
         for proxy in valid_proxies:
             file.write(proxy + '\n')
-    print(colorama.Fore.GREEN + "Validated Proxies.")
+    cprint("Validated Proxies.", 0)
     main()
 
 def webhook_deleter():
@@ -161,15 +169,15 @@ def webhook_deleter():
         webhook = input(colorama.Fore.RESET + "Webhook to delete: ")
 
         if validate_webhook(webhook) is False:
-            print(colorama.Fore.RED + "Invalid Webhook\n")
+            cprint("Invalid Webhook\n", 1)
             webhook_deleter()
 
         response = requests.delete(webhook)
         if response.status_code == 204:
-            print(colorama.Fore.GREEN + "Webhook deleted successfully.\n")
+            cprint("Webhook deleted successfully.\n", 0)
             main()
         else:
-            print(colorama.Fore.RED + "Failed to delete webhook - if the issue persists dm me on discord: flashgriefs\n")
+            cprint("Failed to delete webhook - if the issue persists dm me on discord: flashgriefs\n", 1)
             webhook_deleter()
         main()
     except KeyboardInterrupt:
@@ -210,10 +218,10 @@ def token_info():
             for guild in guilds_data:
                 print(colorama.Fore.CYAN + f"Server Name: {guild['name']}, Server ID: {guild['id']}")
         else:
-            print(colorama.Fore.RED + "Invalid Token.\n")
+            cprint("Invalid Token.\n", 1)
             main()
     else:
-        print(colorama.Fore.RED + "Unexpected response from Discord API.\n")
+        cprint("Unexpected response from Discord API.\n", 1)
         main()
     print("")
     main()
@@ -224,7 +232,7 @@ def bot_nuker():
 
 def shitty_nitro_sniper():
     shitty_sniper()
-    print("Terminating sniper...")
+    cprint("Terminating sniper...", 0)
     time.sleep(10)
     clear()
     main()
@@ -239,7 +247,7 @@ options = {
 }
 
 def invalid_option():
-    print (colorama.FORE.RED + "INVALID OPTION")
+    cprint("INVALID OPTION", 1)
     options.get(int(input(colorama.Fore.WHITE + "Choose Option: ")), invalid_option)
 
 def main():
@@ -253,13 +261,17 @@ def main():
                                     ██║░░██║██║░░██║███████╗╚██████╔╝██████╔╝
                                     ╚═╝░░╚═╝╚═╝░░╚═╝╚══════╝░╚═════╝░╚═════╝░""")
     print ("https://github.com/FlashGriefs/Hazus\n")
-    print (colorama.Fore.YELLOW + 
-"""    [1] Validate Proxies
-    [2] Webhook Spammer
-    [3] Webhook Deleter
-    [4] Token Info
-    [5] Bot Nuker
-    [6] Shitty Nitro Sniper""")
+    print (f"""
+    {gray}[{cyan}1{gray}]{yellow} Validate Proxies
+    {gray}[{cyan}2{gray}]{yellow} Webhook Spammer
+    {gray}[{cyan}3{gray}]{yellow} Webhook Deleter
+    {gray}[{cyan}4{gray}]{yellow} Token Info
+    {gray}[{cyan}5{gray}]{yellow} Bot Nuker
+    {gray}[{cyan}6{gray}]{yellow} Shitty Nitro Sniper""")
+    proxys = get_proxies()
+    if not proxys:
+        print ("")
+        cprint("THERE ARE NO PROXIES IN PROXIES.TXT YOU MAY EXPERIENCE CRASHES!", 2)
     try:
         choice = int(input(colorama.Fore.WHITE + "\nChoose Option: "))
         if choice in options:
@@ -267,6 +279,18 @@ def main():
         else:
             invalid_option()
     except ValueError:
-        print (colorama.Fore.RED + "INVALID OPTION")
+        cprint("INVALID OPTION", 1)
+
+
+if os.name == 'nt':
+        os.system('title Hazus')
+else:
+    sys.stdout.write(f"\033]0;Hazus\007")
+    sys.stdout.flush()
+gray = colorama.Fore.LIGHTBLACK_EX
+cyan = colorama.Fore.CYAN
+green = colorama.Fore.GREEN
+red = colorama.Fore.RED
+yellow = colorama.Fore.YELLOW
 clear()
 main()

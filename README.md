@@ -1,11 +1,10 @@
 # Hazus
 A discord multi tool pleasure project.
 
-# Setup
-1) Clone the repo or download the files the unzip them.
-2) Make sure you have python installed.
-3) Run click InstallLibs.bat
-4) Run start.bat
+# How to use
+1) Go to the "releases" tab
+2) Download Hazus.exe
+3) Run it.
 
 # Features:
 - Webhook Spammer

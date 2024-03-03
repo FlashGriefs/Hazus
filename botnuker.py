@@ -27,7 +27,7 @@ def get_proxies():
 def sort_roles(token, proxy, guildid, send_errors, proxylist):
     while True:
         try:
-            response = requests.get(f'https://discord.com/api/v9/guilds/{guildid}/roles', proxies={"http": proxy, "https": proxy}, headers={'Authorization': f'Bot {token}'}, timeout=2)
+            response = requests.get(f'https://discord.com/api/v9/guilds/{guildid}/roles', proxies={"http": proxy, "https": proxy}, headers={'Authorization': f'Bot {token}'}, timeout=1.5)
             if response.status_code == 200:
                 roles = response.json()
                 sorted_roles = sorted(roles, key=lambda x: x['position'], reverse=True)
@@ -56,8 +56,8 @@ def get_bot_highest_role_position(token, proxy, guildid, botid, sorted_roles, se
                 return -1
         except Exception as e:
             if send_errors.lower().strip() == "y":
-                print(colorama.Fore.RED + f"Error: {e} with proxy {proxy}. Trying with a different one.")
-            proxylist.remove(proxy)
+                print(colorama.Fore.RED + f"GET_BOT Error: {e} with proxy {proxy}. Trying with a different one.")
+            #proxylist.remove(proxy)
             if not proxylist:
                 cprint ("ALL PROXIES HAVE FAILED!", 1)
             else:

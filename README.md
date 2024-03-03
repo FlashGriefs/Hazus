@@ -31,4 +31,4 @@ Q: Can you add x feature?
 
 A: Mabye dm me on discord and suggest it (flashgriefs is my discord user)
 
-![image](https://github.com/FlashGriefs/Hazus/assets/140736136/1357592f-2ae0-41cf-8227-65b25622fbfd)
+![image](https://github.com/FlashGriefs/Hazus/assets/140736136/46145a33-e8fd-4a67-8d2c-3c0027b01a97)

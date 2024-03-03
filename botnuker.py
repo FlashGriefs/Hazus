@@ -169,13 +169,32 @@ def dm_member(dm_message, token, proxy, member, proxylist, send_errors):
             dm_member(dm_message, token, proxy, member, proxylist, send_errors)
     except Exception as e:
         if send_errors.lower().strip() == "y":
-                print(colorama.Fore.RED + f"Error: {e} with proxy {proxy}. Trying with a different one.")
+            print(colorama.Fore.RED + f"Error: {e} with proxy {proxy}. Trying with a different one.")
         proxylist.remove(proxy)
         if not proxylist:
             print(colorama.Fore.RED + "ERROR: ALL PROXIES HAVE FAILED!")
         else:
             proxy = random.choice(proxylist)
             dm_member(dm_message, token, proxy, member, proxylist, send_errors)
+
+
+
+
+
+
+
+# def fetch_and_sort_roles_by_position(token, proxy, guildid):
+#     response = requests.get(f'https://discord.com/api/v9/guilds/{guildid}/roles', proxies={"http": proxy, "https": proxy}, headers={'Authorization': f'Bot {token}'})
+#     if response.status_code == 200:
+#         roles = response.json()
+#         sorted_roles = sorted(roles, key=lambda x: x['position'], reverse=True)
+#         return sorted_roles
+#     else:
+#         print(colorama.Fore.RED + "ERROR: FAILED TO FETCH ROLES INFO!")
+
+
+
+
 
 def ban_member(token, proxy, guildid, member, proxylist, send_errors):
     try:

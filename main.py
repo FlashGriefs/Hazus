@@ -73,8 +73,8 @@ def post_to_webhook(proxy=False, webhook=None, data=None, headers=None):
         except requests.exceptions.ReadTimeout:
             cprint(f"Proxy {proxy} Timed out.", 1)
         except:
-            cprint(f"Unkown Error: {proxy}", 1)
-
+            cprint(f"Unknown Error: {proxy}", 1)
+            traceback.print_exc()
 def webhook_spammer():
     try:
         webhook = input(colorama.Fore.RESET + "Webhook URL: ")
@@ -290,7 +290,7 @@ def main():
     except ValueError:
         cprint("INVALID OPTION", 1)
     except KeyboardInterrupt:
-        print("Exiting.")
+        print("\nExiting.")
         sys.exit(0)
 
 if os.name == 'nt':

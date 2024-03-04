@@ -5,7 +5,6 @@ import subprocess
 import requests
 import os
 import sys
-import traceback
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from botnuker import bot_nuker_helper
 from shittysniper import shitty_sniper

@@ -4,9 +4,17 @@ import time
 import subprocess
 import requests
 import os
+import sys
+import traceback
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from botnuker import bot_nuker_helper
 from shittysniper import shitty_sniper
+
+gray = colorama.Fore.LIGHTBLACK_EX
+cyan = colorama.Fore.CYAN
+green = colorama.Fore.GREEN
+red = colorama.Fore.RED
+yellow = colorama.Fore.YELLOW
 
 def cprint(text, type):
     if type == 0:
@@ -51,7 +59,8 @@ def post_to_webhook(proxy=False, webhook=None, data=None, headers=None):
         except requests.exceptions.ReadTimeout:
             cprint(f"Proxy {proxy} Timed out.", 1)
         except:
-            cprint(f"Unkown Error: {proxy}", 1)
+            cprint(f"Unknown Error: {proxy}", 1)
+            traceback.print_exc()
     else:
         try:
             response = requests.post(webhook, proxies={"http": proxy, "https": proxy}, data=json.dumps(data), headers=headers, timeout=4)
@@ -280,17 +289,16 @@ def main():
             invalid_option()
     except ValueError:
         cprint("INVALID OPTION", 1)
-
+    except KeyboardInterrupt:
+        print("Exiting.")
+        sys.exit(0)
 
 if os.name == 'nt':
-        os.system('title Hazus')
+    os.system('title Hazus')
 else:
     sys.stdout.write(f"\033]0;Hazus\007")
     sys.stdout.flush()
-gray = colorama.Fore.LIGHTBLACK_EX
-cyan = colorama.Fore.CYAN
-green = colorama.Fore.GREEN
-red = colorama.Fore.RED
-yellow = colorama.Fore.YELLOW
+
+
 clear()
 main()

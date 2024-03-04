@@ -60,7 +60,6 @@ def post_to_webhook(proxy=False, webhook=None, data=None, headers=None):
             cprint(f"Proxy {proxy} Timed out.", 1)
         except:
             cprint(f"Unknown Error: {proxy}", 1)
-            traceback.print_exc()
     else:
         try:
             response = requests.post(webhook, proxies={"http": proxy, "https": proxy}, data=json.dumps(data), headers=headers, timeout=4)
@@ -74,7 +73,6 @@ def post_to_webhook(proxy=False, webhook=None, data=None, headers=None):
             cprint(f"Proxy {proxy} Timed out.", 1)
         except:
             cprint(f"Unknown Error: {proxy}", 1)
-            traceback.print_exc()
 def webhook_spammer():
     try:
         webhook = input(colorama.Fore.RESET + "Webhook URL: ")

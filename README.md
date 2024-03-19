@@ -46,5 +46,5 @@ Q: Can you add x feature?
 
 A: Mabye dm me on discord and suggest it (flashgriefs is my discord user)
 
-![image](https://github.com/FlashGriefs/Hazus/assets/140736136/f1de4e40-c0c2-4e3a-bc39-9ebded3caa66)
+![image](https://github.com/FlashGriefs/Hazus/assets/140736136/b27e4206-100e-4780-8c2b-14279096804a)
 

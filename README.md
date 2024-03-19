@@ -26,6 +26,10 @@ A discord multi tool pleasure project.
 
 
 # Q/A
+Q: Why is it flagging my antivurs?
+
+A: Ngl I have no idea, I think its smth to do with it creating a the config file and stuff cause it started flagging after i added that feature. Windows av is stupid. Just add it to the antivirus whitelist.
+
 Q: Why is Hazus crashing when I try to use the tools?
 
 A: You have no proxies in proxies.txt

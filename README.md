@@ -1,6 +1,8 @@
 # Hazus
 A discord multi tool pleasure project.
 
+Support: https://www.guilded.gg/i/EleDa0V2
+
 # How to use
 1) Go to the "releases" tab
 2) Download Hazus.zip

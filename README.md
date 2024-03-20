@@ -15,7 +15,7 @@ A discord multi tool pleasure project.
 - Bot Nuker
 - Shitty Nitro Sniper (Buggy)
 
-# To Do (in order of when ima do it):
+# To Do:
 - Improve Token Info 
 - Account Nuker
 - Discord Raider

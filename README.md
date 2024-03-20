@@ -16,9 +16,6 @@ A discord multi tool pleasure project.
 - Shitty Nitro Sniper (Buggy)
 
 # To Do (in order of when ima do it):
-- Bug fixes for Bot Nuker
-- Settings/Config
-- Make Bot Nuker change server name
 - Improve Token Info 
 - Account Nuker
 - Discord Raider
@@ -26,7 +23,7 @@ A discord multi tool pleasure project.
 
 
 # Q/A
-Q: Why is it flagging my antivurs?
+Q: Why is it flagging my antivirus?
 
 A: Ngl I have no idea, I think its smth to do with it creating a the config file and stuff cause it started flagging after i added that feature. Windows av is stupid. Just add it to the antivirus whitelist.
 
@@ -36,7 +33,7 @@ A: You have no proxies in proxies.txt
 
 Q: Can I fork this and make my own multitool?
 
-A: Sure just credit me, but I wouldnt recommend it as im a super messy coder.
+A: Sure just credit me.
 
 Q: Is this a fork and or skid of another multitool?
 

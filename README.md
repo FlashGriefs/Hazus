@@ -36,7 +36,7 @@ A: You have no proxies in proxies.txt
 
 Q: Can I fork this and make my own multitool?
 
-A: Sure just credit me, but I wouldnt recommend it as im a super messy coder.
+A: Sure just credit me.
 
 Q: Is this a fork and or skid of another multitool?
 

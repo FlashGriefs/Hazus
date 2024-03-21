@@ -5,9 +5,8 @@ Support: https://www.guilded.gg/i/EleDa0V2
 
 # How to use
 1) Go to the "releases" tab
-2) Download Hazus.zip
-3) Extract the folder thats inside the zip file
-4) Open the folder and run Hazus.exe
+2) Download Hazus.exe
+3) Run it
 
 # Features:
 - Webhook Spammer

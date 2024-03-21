@@ -54,8 +54,9 @@ def bot_nuker():
         
         async def delete_role(role):
             try:
-                await role.delete()
-                await asynccprint(f"Deleted Role {role}", 0)
+                if not role.managed:
+                    await role.delete()
+                    await asynccprint(f"Deleted Role {role}", 0)
             except Exception as e:
                 await asyncio.sleep(0.3)
                 print (e)

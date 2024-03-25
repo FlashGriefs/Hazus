@@ -4,9 +4,18 @@ A discord multi tool pleasure project.
 Support: https://www.guilded.gg/i/EleDa0V2
 
 # How to use
+
+# WINDOWS:
 1) Go to the "releases" tab
 2) Download Hazus.exe
-3) Run it
+3) Run Hazus.exe
+
+# MAC/Linux:
+1) Go to the "releases" tab
+2) Download Hazus
+3) Open terminal in the same folder as Hazus
+4) Run chmod +x Hazus
+5) Run Hazus
 
 # Features:
 - Webhook Spammer

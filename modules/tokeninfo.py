@@ -20,8 +20,11 @@ def token_info():
         print(colorama.Fore.CYAN + f"------------{username}------------\n")
         print(colorama.Fore.CYAN + f"Servers {username} is in:\n")
         guilds_data = guilds_response.json()
+        guildcount = 0
         for guild in guilds_data:
-            print(colorama.Fore.CYAN + f"Server Name: {guild['name']}, Server ID: {guild['id']}")
+            guildcount += 1
+            print(colorama.Fore.CYAN + f"Server Name: {guild['name']} | Server ID: {guild['id']}")
+        print(f"{username} is in {guildcount} servers.")
     elif response.status_code == 401:
         response = requests.get("https://discord.com/api/v9/users/@me", headers={"Authorization": f"Bot {token}"})
         if response.status_code == 200:
@@ -36,8 +39,11 @@ def token_info():
             print(colorama.Fore.CYAN + f"------------{username}------------\n")
             print(colorama.Fore.CYAN + f"Servers {username} is in:\n")
             guilds_data = guilds_response.json()
+            guildcount = 0
             for guild in guilds_data:
-                print(colorama.Fore.CYAN + f"Server Name: {guild['name']}, Server ID: {guild['id']}")
+                guildcount += 1
+                print(colorama.Fore.CYAN + f"Server Name: {guild['name']} | Server ID: {guild['id']}")
+            print(f"{username} is in {guildcount} servers.")
         else:
             cprint("Invalid Token.\n", 1)
     else:

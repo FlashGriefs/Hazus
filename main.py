@@ -1,6 +1,7 @@
 import colorama
 import os
 import sys
+import asyncio
 from modules import shitty_sniper
 from modules import bot_nuker
 from modules import webhook_spammer

@@ -19,7 +19,7 @@ def menu():
                                     ██╔══██║██╔══██║██╔══╝  ██║   ██║ ╚═══██╗
                                     ██║  ██║██║  ██║███████╗╚██████╔╝██████╔╝
                                     ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═════╝ """)
-    print ("https://github.com/FlashGriefs/Hazus\n")
+    print ("https://guilded.gg/Hazus\n")
 
 async def asynccprint(text, type):
     if type == 0:

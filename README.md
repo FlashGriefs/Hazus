@@ -51,7 +51,7 @@ A: No its made from scratch
 
 Q: Can you add x feature?
 
-A: Mabye dm me on discord and suggest it (flashgriefs is my discord user)
+A: Mabye, you can sugget it in #suggestions in https://guilded.gg/Hazus
 
 ![image](https://github.com/FlashGriefs/Hazus/assets/140736136/b27e4206-100e-4780-8c2b-14279096804a)
 

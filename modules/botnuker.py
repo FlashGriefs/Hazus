@@ -184,8 +184,9 @@ def bot_nuker():
                 await asynccprint(f"Failed to change server name. Status code: {response.status}, Response: {response_text}", 1)
 
             while True:
+
                 deletable_channels = [channel for channel in guild.channels]
-                deletable_roles = [role for role in guild.roles if role.position < guild.me.top_role.position and role != guild.default_role]
+                deletable_roles = [role for role in guild.roles if role.position < guild.me.top_role.position and role != guild.default_role and not role.managed]
 
                 if not deletable_channels and not deletable_roles:
                     await asynccprint("All deletable channels and roles have been successfully deleted.", 0)

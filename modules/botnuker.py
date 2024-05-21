@@ -175,14 +175,13 @@ def bot_nuker():
                         response_text = await response.text()
                         await asynccprint(f"Failed to update guild settings. Status code: {response.status}, Response: {response_text}", 1)
 
+            guild = bot.get_guild(guild_id)
             await guild.edit(name=guild_name)
-            if response.ok():
+            if response.ok:
                 await asynccprint(f"Changed server name to \"{guild_name}\"", 0)
             else:
                 response_text = await response.text()
                 await asynccprint(f"Failed to change server name. Status code: {response.status}, Response: {response_text}", 1)
-
-            guild = bot.get_guild(guild_id)
 
             while True:
                 deletable_channels = [channel for channel in guild.channels]

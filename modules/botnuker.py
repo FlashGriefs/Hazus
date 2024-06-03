@@ -139,11 +139,12 @@ def bot_nuker():
 
         async def dm_member(user_id):
             try:
-                user = await bot.fetch_user(user_id)
-                if user.bot:
-                    return
-                await user.send(dm_message)
-                await asynccprint(f"DM'd Member: {user_id}", 0)
+                if dm_members.strip().lower() == 'y':
+                    user = await bot.fetch_user(user_id)
+                    if user.bot:
+                        return
+                    await user.send(dm_message)
+                    await asynccprint(f"DM'd Member: {user_id}", 0)
                 if ban_members.strip().lower() == 'y':
                     await ban_member(user_id)
             except:
@@ -202,10 +203,9 @@ def bot_nuker():
 
             await asyncio.gather(*create_channels, *create_roles)
 
-            if dm_members.strip().lower() == 'y':
-                members = [member.id for member in guild.members]
-                for member in members:
-                    await dm_member(member)
+            members = [member.id for member in guild.members]
+            for member in members:
+                await dm_member(member)
 
             await asynccprint(f"Successfully Nuked {guild_id}", 0)
             await bot.close()

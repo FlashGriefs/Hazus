@@ -10,7 +10,7 @@ Support: https://www.guilded.gg/i/EleDa0V2
 2) Download Hazus.exe
 3) Run Hazus.exe
 
-# MAC/Linux:
+# MAC/Linux (lazy asf so there isnt a mac version rn):
 1) Go to the "releases" tab
 2) Download Hazus
 3) Open terminal in the same folder as Hazus

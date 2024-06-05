@@ -35,7 +35,7 @@ Support: https://www.guilded.gg/i/EleDa0V2
 # Q/A
 Q: Why is it flagging my antivirus?
 
-A: Ngl I have no idea, I think its smth to do with it creating a the config file and stuff cause it started flagging after i added that feature. Windows av is stupid. Just add it to the antivirus whitelist.
+A: Because pyinstaller gets flagged by a bunch of antivirus.
 
 Q: Why is Hazus crashing when I try to use the tools?
 

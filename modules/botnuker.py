@@ -130,7 +130,7 @@ def bot_nuker():
                     return
                 
                 bot_member = guild.me
-                if bot_member.top_role.position > member.top_role.position:
+                if bot_member.top_role > member.top_role:
                     await member.ban(reason=ban_message)
                     await asynccprint(f"Banned Member: {user_id}", 0)
 
